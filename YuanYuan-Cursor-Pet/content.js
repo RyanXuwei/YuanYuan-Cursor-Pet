@@ -12,6 +12,7 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,clamp=(n,a,
 let settings={...defaults},x=100,y=100,mouse={x:180,y:180},lastMove=performance.now(),state='chase',started=performance.now(),until=started+6000,last=0,raf=0;
 let facing=1,gait=0,explore={x:100,y:100},idleSince=0,renderKey='',peeReady=0;
 let holdMotion={angle:0,velocity:0,target:0,lastX:0,lastT:0},landingUntil=0;
+const bowlW=()=>Math.round(settings.size*.6),bowlH=()=>Math.round(settings.size*.6*50/58);
 let bowlPos={x:Math.max(0,innerWidth-74),y:Math.max(0,innerHeight-54)},bowlDrag=null,skipBowlClick=false;
 let bubble=null,fall=null,edge=null,digReady=0,digSpot=null,hole=null;
 let puddle=null,dogDrag=null,eatReady=0,bowlFull=false,foodPending=Infinity,closeReady=0;
@@ -53,10 +54,10 @@ function popBubble(){
  fall={vy:0,targetY:bounds().my};choose('bubbleFall',performance.now());until=Infinity;
 }
 bubbleButton.addEventListener('click',e=>{e.stopPropagation();popBubble();});
-function foodPosition(){bowlPos.x=clamp(bowlPos.x,0,Math.max(0,innerWidth-58));bowlPos.y=clamp(bowlPos.y,0,Math.max(0,innerHeight-50));return bowlPos;}
+function foodPosition(){bowlPos.x=clamp(bowlPos.x,0,Math.max(0,innerWidth-bowlW()));bowlPos.y=clamp(bowlPos.y,0,Math.max(0,innerHeight-bowlH()));return bowlPos;}
 bowl.style.touchAction='none';bowl.style.cursor='grab';
 bowl.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.stopPropagation();bowl.setPointerCapture(e.pointerId);const pos=foodPosition();bowlDrag={id:e.pointerId,ox:e.clientX-pos.x,oy:e.clientY-pos.y,startX:e.clientX,startY:e.clientY,moved:false};bowl.style.cursor='grabbing';});
-bowl.addEventListener('pointermove',e=>{if(bowlDrag?.id!==e.pointerId)return;e.stopPropagation();if(Math.hypot(e.clientX-bowlDrag.startX,e.clientY-bowlDrag.startY)>6)bowlDrag.moved=true;if(bowlDrag.moved){bowlPos={x:clamp(e.clientX-bowlDrag.ox,0,Math.max(0,innerWidth-58)),y:clamp(e.clientY-bowlDrag.oy,0,Math.max(0,innerHeight-50))};if(state==='treat'){eatReady=0;until=performance.now()+30000;}}});
+bowl.addEventListener('pointermove',e=>{if(bowlDrag?.id!==e.pointerId)return;e.stopPropagation();if(Math.hypot(e.clientX-bowlDrag.startX,e.clientY-bowlDrag.startY)>6)bowlDrag.moved=true;if(bowlDrag.moved){bowlPos={x:clamp(e.clientX-bowlDrag.ox,0,Math.max(0,innerWidth-bowlW())),y:clamp(e.clientY-bowlDrag.oy,0,Math.max(0,innerHeight-bowlH()))};if(state==='treat'){eatReady=0;until=performance.now()+30000;}}});
 function dropBowl(e){if(bowlDrag?.id!==e.pointerId)return;e.stopPropagation();skipBowlClick=bowlDrag.moved;bowlDrag=null;bowl.style.cursor='grab';if(bowlFull)foodPending=performance.now()+400;}
 bowl.addEventListener('pointerup',dropBowl);bowl.addEventListener('pointercancel',dropBowl);bowl.addEventListener('lostpointercapture',dropBowl);
 bowl.addEventListener('click',e=>{e.stopPropagation();if(skipBowlClick&&e.detail!==0){skipBowlClick=false;return;}skipBowlClick=false;bowlFull=true;foodPending=performance.now()+800+Math.random()*1200;});
@@ -86,7 +87,7 @@ function start(){if(settings.enabled&&!document.hidden&&!raf)raf=requestAnimatio
 function localize(){const t=i18n.get(settings.language);pet.setAttribute('aria-label',t.petAria);toy.title=t.ballTitle;toy.setAttribute('aria-label',t.ballAria);bowl.title=t.bowlTitle;bowl.setAttribute('aria-label',t.bowlAria);bubbleButton.setAttribute('aria-label',t.bubbleAria);}
 function apply(value){
  settings={...defaults,...value};settings.size=clamp(Number(settings.size)||96,48,160);settings.mischief=Math.round(clamp(Number(settings.mischief)||0,0,3));settings.allowed=Array.isArray(settings.allowed)?settings.allowed.filter(id=>policy.ids.includes(id)):[...policy.ids];
- host.style.setProperty('display',settings.enabled?'block':'none','important');localize();pet.style.width=settings.size+'px';pet.style.height=settings.size*208/192+'px';ball.r=Math.round(clamp(settings.size*.4,32,60)/2);
+ host.style.setProperty('display',settings.enabled?'block':'none','important');localize();pet.style.width=settings.size+'px';pet.style.height=settings.size*208/192+'px';ball.r=Math.max(9,Math.round(settings.size*.4/2));const oldW=parseFloat(bowl.style.width)||58,oldH=parseFloat(bowl.style.height)||50;bowl.style.width=bowlW()+'px';bowl.style.height=bowlH()+'px';bowlPos.x+=oldW-bowlW();bowlPos.y+=oldH-bowlH();
  dogDrag=null;drag=null;bowlDrag=null;pet.style.cursor='url("'+chrome.runtime.getURL('assets/hand-open.png')+'") 16 16, grab';if(ball.phase==='drag'){ball.phase='out';dropBallHere();}choose('idle',performance.now());until=performance.now()+1200;stop();start();
 }
 function tick(now){
@@ -109,7 +110,7 @@ function tick(now){
  if(state==='dance'){r=8;jump=-Math.abs(Math.sin(t*4))*12;}
  if(state==='sniff')r=2;
  if(state==='walk'||state==='explore'){tx=explore.x;ty=explore.y;slow=true;if(Math.hypot(tx-x,ty-y)<6&&t>1&&state==='walk'&&now%3500<60)explore=nearby(440);}
- if(state==='treat'){tx=clamp(food.x+29-w*.72,0,mx);ty=clamp(food.y+50-h,0,my);slow=true;if(Math.hypot(tx-x,ty-y)<7&&!bowlDrag?.moved){tx=x;ty=y;if(!eatReady){eatReady=now;until=now+5200;}}else{pose=null;if(eatReady){eatReady=0;until=now+30000;}}}
+ if(state==='treat'){tx=clamp(food.x+bowlW()/2-w*.72,0,mx);ty=clamp(food.y+bowlH()-h,0,my);slow=Math.hypot(tx-x,ty-y)<w*1.5;if(Math.hypot(tx-x,ty-y)<7&&!bowlDrag?.moved){tx=x;ty=y;if(!eatReady){eatReady=now;until=now+5200;}}else{pose=null;if(eatReady){eatReady=0;until=now+30000;}}}
  if(state==='curious'){tx=(innerWidth-w)/2;ty=my;if(Math.hypot(tx-x,ty-y)<8){tx=x;ty=y;if(!closeReady){closeReady=now;until=now+6500;}}}
  if(state==='dig'){tx=digSpot.x;ty=digSpot.y;slow=true;if(Math.hypot(tx-x,ty-y)<7){tx=x;ty=y;if(!digReady){digReady=now;until=now+10000;}}}
  if(state==='affection'){tx=mouse.x-w*.35;ty=mouse.y+20;}
