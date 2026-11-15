@@ -83,15 +83,22 @@ function choose(next,now){
 }
 function nextAuto(now){return policy.pick({policy:settings.mischief,allowed:settings.allowed,now,lastUsed,idleMs:now-lastMove,width:innerWidth,height:innerHeight,foodAvailable:bowlFull});}
 function stop(){cancelAnimationFrame(raf);raf=0;last=0;}
-function start(){if(settings.enabled&&!document.hidden&&!raf)raf=requestAnimationFrame(tick);}
+let fsHidden=false;const fsQuery=matchMedia('(display-mode: fullscreen)');
+function isFullscreen(){
+ if(document.fullscreenElement||document.webkitFullscreenElement)return true;   // video / player / whole-page fullscreen (YouTube etc.)
+ return fsQuery.matches;                                                       // browser fullscreen (F11)
+}
+function showHost(){host.style.setProperty('display',settings.enabled&&!fsHidden?'block':'none','important');host.dataset.fullscreenHidden=String(fsHidden);}
+function updateFullscreen(){const v=isFullscreen();if(v===fsHidden)return;fsHidden=v;if(fsHidden){dogDrag=null;drag=null;bowlDrag=null;stop();}showHost();if(!fsHidden)start();}
+function start(){if(settings.enabled&&!fsHidden&&!document.hidden&&!raf)raf=requestAnimationFrame(tick);}
 function localize(){const t=i18n.get(settings.language);pet.setAttribute('aria-label',t.petAria);toy.title=t.ballTitle;toy.setAttribute('aria-label',t.ballAria);bowl.title=t.bowlTitle;bowl.setAttribute('aria-label',t.bowlAria);bubbleButton.setAttribute('aria-label',t.bubbleAria);}
 function apply(value){
  settings={...defaults,...value};settings.size=clamp(Number(settings.size)||96,48,160);settings.mischief=Math.round(clamp(Number(settings.mischief)||0,0,3));settings.allowed=Array.isArray(settings.allowed)?settings.allowed.filter(id=>policy.ids.includes(id)):[...policy.ids];
- host.style.setProperty('display',settings.enabled?'block':'none','important');localize();pet.style.width=settings.size+'px';pet.style.height=settings.size*208/192+'px';ball.r=Math.max(9,Math.round(settings.size*.4/2));const oldW=parseFloat(bowl.style.width)||58,oldH=parseFloat(bowl.style.height)||50;bowl.style.width=bowlW()+'px';bowl.style.height=bowlH()+'px';bowlPos.x+=oldW-bowlW();bowlPos.y+=oldH-bowlH();
+ showHost();localize();pet.style.width=settings.size+'px';pet.style.height=settings.size*208/192+'px';ball.r=Math.max(9,Math.round(settings.size*.4/2));const oldW=parseFloat(bowl.style.width)||58,oldH=parseFloat(bowl.style.height)||50;bowl.style.width=bowlW()+'px';bowl.style.height=bowlH()+'px';bowlPos.x+=oldW-bowlW();bowlPos.y+=oldH-bowlH();
  dogDrag=null;drag=null;bowlDrag=null;pet.style.cursor='url("'+chrome.runtime.getURL('assets/hand-open.png')+'") 16 16, grab';if(ball.phase==='drag'){ball.phase='out';dropBallHere();}choose('idle',performance.now());until=performance.now()+1200;stop();start();
 }
 function tick(now){
- raf=0;if(!settings.enabled||document.hidden)return;const dt=Math.min((now-(last||now))/1000,.05);last=now;
+ raf=0;if(!settings.enabled||fsHidden||document.hidden)return;const dt=Math.min((now-(last||now))/1000,.05);last=now;
  if(state==='bubble'&&now>until)popBubble();
  if(!dogDrag&&now>until){if(state==='treat'&&eatReady)bowlFull=false;if(state==='idle'){choose(nextAuto(now),now);if(state==='idle')until=now+3000;}else{choose('idle',now);until=now+policy.gapMs(settings.mischief);}}
  const w=settings.size,h=w*208/192,{mx,my}=bounds(),t=(now-started)/1000;
@@ -205,6 +212,7 @@ toy.addEventListener('pointercancel',()=>{drag=null;ball.phase='out';dropBallHer
 toy.addEventListener('lostpointercapture',e=>{if(drag?.id===e.pointerId){drag=null;ball.phase='out';dropBallHere();}});
 toy.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();throwBall(ball.x,ball.y,performance.now(),(ball.x>innerWidth/2?-1:1)*350,0);}});
 addEventListener('pointermove',e=>{mouse={x:e.clientX,y:e.clientY};lastMove=performance.now();if(state==='sleep'){choose('idle',lastMove);until=lastMove+1500;}},{passive:true});
+for(const type of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(type,updateFullscreen);fsQuery.addEventListener('change',updateFullscreen);addEventListener('resize',updateFullscreen);updateFullscreen();
 document.addEventListener('visibilitychange',()=>{stop();start();});
 chrome.storage.local.get(null).then(saved=>{const allowed=policy.allowedFor(saved);apply({...saved,allowed});if(saved.behaviorSchema!==2)chrome.storage.local.set({allowed,behaviorSchema:2});});
 chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local'){const next={...settings};for(const key of Object.keys(defaults))if(changes[key])next[key]=changes[key].newValue??defaults[key];apply(next);}});

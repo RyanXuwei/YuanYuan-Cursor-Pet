@@ -21,6 +21,7 @@ Download the latest ZIP from Releases (or clone), open `chrome://extensions`, en
 - 4 種行動方針（乖巧安靜／親人撒嬌／活潑好奇／調皮搗蛋），各有不同權重、休息間隔與冷卻時間；可勾選允許出現的行為。沒有直接下指令的選單。
 - 直接互動：拖曳拎起圓圓（隨滑鼠晃動、放手短距離落地）、拖球投擲、拖動或點擊飯碗餵食；球與飯碗隨圓圓大小等比例縮放。
 - 球的物理：固定地板高度、預設彈跳高度、只在左右邊界反彈。
+- 影片全螢幕、YouTube 全螢幕或瀏覽器全螢幕（F11）時自動隱藏，離開後恢復。
 - 介面支援繁體中文、简体中文、English、日本語、한국어。
 - 只使用 `storage` 權限；不讀取網頁內容、無外部請求或追蹤。
 
@@ -42,7 +43,7 @@ Made by Ryan Hsu · BitingBox Studio
 - 工作室：BitingBox Studio
 - 程式製作年份：2026
 - 程式製作日期：2026-11-15
-- 目前版本：1.8.1
+- 目前版本：1.9.0
 - [在 GitHub 查看 Ryan Hsu 的作品](https://github.com/RyanXuwei)
 
 本 repo 目前未附開源授權。BitingBox Studio 標誌與圓圓角色圖像的使用範圍另依品牌規範，不隨程式碼授權。
