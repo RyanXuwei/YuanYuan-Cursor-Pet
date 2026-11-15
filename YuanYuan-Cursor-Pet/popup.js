@@ -1,6 +1,6 @@
 'use strict';
 const policy=globalThis.YuanYuanPolicy,i18n=globalThis.YuanYuanI18n;
-const defaults={enabled:true,size:96,mischief:2,language:'auto',allowed:[...policy.ids]};
+const defaults={enabled:true,size:96,mischief:2,language:'auto',cageSites:[],allowed:[...policy.ids]};
 const htmlLang={en:'en','zh-TW':'zh-Hant','zh-CN':'zh-Hans',ja:'ja',ko:'ko'};
 let settings={...defaults},statusKey='ready';
 const $=id=>document.getElementById(id),status=$('status');
@@ -11,7 +11,7 @@ async function save(change){
  render();
 }
 function render(){
- const tr=t();
+ const tr=t();renderCage(tr);
  document.documentElement.lang=htmlLang[i18n.resolve(settings.language)];document.title=tr.appName;$('icon').alt=tr.iconAlt;$('studioLogo').alt=tr.logoAlt;$('version').textContent=chrome.runtime.getManifest().version;
  for(const el of document.querySelectorAll('[data-i18n]'))el.textContent=tr[el.dataset.i18n];
  [...$('mischief').options].forEach((o,i)=>o.textContent=tr.profiles[i]);
@@ -50,3 +50,20 @@ $('size').addEventListener('change',e=>save({size:Number(e.target.value)}));
 $('size').addEventListener('input',e=>$('sizeValue').textContent=e.target.value+' px');
 $('mischief').addEventListener('change',e=>save({mischief:Number(e.target.value)}));
 $('language').addEventListener('change',e=>save({language:e.target.value}));
+
+function renderCage(tr){
+ const list=$('cageList');list.replaceChildren();
+ const sites=globalThis.YuanYuanCage.normalize(settings.cageSites);
+ if(!sites.length){const p=document.createElement('p');p.className='note';p.textContent=tr.cageEmpty;list.append(p);return;}
+ for(const host of sites){
+  const row=document.createElement('div');row.className='cage-row';
+  const name=document.createElement('span');name.textContent=host;
+  const remove=document.createElement('button');remove.type='button';remove.textContent=tr.cageDelete;remove.setAttribute('aria-label',i18n.format(tr.cageRemoveAria,{host}));
+  remove.addEventListener('click',async()=>{remove.disabled=true;try{const res=await chrome.runtime.sendMessage({type:'yuanyuan-cage-remove',hostname:host});if(!res?.ok)throw Error('remove');settings.cageSites=res.sites;statusKey='saved';}catch{statusKey='error';}render();});
+  row.append(name,remove);list.append(row);
+ }
+}
+chrome.storage.onChanged.addListener((changes,area)=>{
+ if(area!=='local')return;
+ if(changes.cageSites){settings.cageSites=globalThis.YuanYuanCage.normalize(changes.cageSites.newValue);render();}
+});

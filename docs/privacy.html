@@ -27,7 +27,7 @@
     <nav aria-label="Language / 語言"><a href="#zh" lang="zh-Hant">繁體中文</a><a href="#en" lang="en">English</a></nav>
     <article id="zh" lang="zh-Hant" aria-labelledby="zh-title">
       <h1 id="zh-title">隱私權政策</h1>
-      <p class="meta">最後更新：<time datetime="2026-11-16">2026 年 11 月 16 日</time> · 適用目前 v1.9.0 的資料處理方式</p>
+      <p class="meta">最後更新：<time datetime="2026-11-16">2026 年 11 月 16 日</time> · 適用目前 v1.10.0 的資料處理方式</p>
       <div class="summary">YuanYuan Cursor Pet 僅在裝置本機處理互動和儲存設定。不將滑鼠活動或偏好設定傳送至開發者或其他外部伺服器，不含廣告追蹤或使用分析。</div>
       <h2>1. 本政策適用範圍</h2>
       <p>本政策說明 BitingBox Studio 的 YuanYuan Cursor Pet Chrome 擴充功能如何處理資料。它在一般網頁中顯示互動角色，依使用者選擇的行動方針自主活動。</p>
@@ -36,8 +36,9 @@
       <p>這些資訊僅在裝置記憶體中短暫使用。例如，投球時會保留近期少量拖曳取樣以計算速度；不建立持久的活動紀錄，不傳送至開發者或外部伺服器，也不用於辨識、分析或追蹤使用者。</p>
       <h2>3. 儲存在裝置的偏好設定</h2>
       <p>擴充功能使用 <code>chrome.storage.local</code> 儲存：</p>
-      <ul><li>角色顯示開關與大小。</li><li>行動方針及允許出現的行為。</li><li>介面語言及設定格式版本。</li></ul>
+      <ul><li>角色顯示開關與大小。</li><li>行動方針及允許出現的行為。</li><li>介面語言及設定格式版本。</li><li>你主動加入狗籠名單的網站主機名稱（網域），用於在指定網站隱藏角色。</li></ul>
       <p>這些資料保存在目前 Chrome 設定檔的本機儲存區；擴充功能不使用 <code>chrome.storage.sync</code> 將其同步至 Google 帳號，也不將其傳送給開發者。</p>
+      <p>狗籠名單不會自動建立造訪歷程，只記錄你主動選擇的網域，不儲存完整網址、路徑、查詢參數或瀏覽時間。</p>
       <h2>4. 不會擷取的資料</h2>
       <p>擴充功能不擷取網頁文字、圖片或表單輸入作為使用者資料，不讀取瀏覽紀錄、密碼、付款資訊、個人聯絡資料或地理位置，也不使用相機或麥克風。網站存取權用於顯示角色、處理上述互動與判斷全螢幕狀態。</p>
       <h2>5. 分享、廣告與外部服務</h2>
@@ -53,7 +54,7 @@
     </article>
     <article id="en" lang="en" aria-labelledby="en-title">
       <h1 id="en-title">Privacy Policy</h1>
-      <p class="meta">Last updated: <time datetime="2026-11-16">November 16, 2026</time> · Reflects the data practices of v1.9.0</p>
+      <p class="meta">Last updated: <time datetime="2026-11-16">November 16, 2026</time> · Reflects the data practices of v1.10.0</p>
       <div class="summary">YuanYuan Cursor Pet processes interactions and stores preferences on your device. It does not send mouse activity or preferences to the developer or external servers, and contains no advertising tracking or usage analytics.</div>
       <h2>1. Scope</h2>
       <p>This policy describes how BitingBox Studio's YuanYuan Cursor Pet Chrome extension handles data. The extension displays an interactive character on ordinary web pages and chooses activities according to your preferences.</p>
@@ -62,8 +63,9 @@
       <p>This information is used temporarily in device memory. For example, a small recent sample of drag events is retained to calculate throw velocity. The extension does not create a persistent activity history, transmit this information to the developer or external servers, or use it to identify, analyze or track you.</p>
       <h2>3. Preferences stored on your device</h2>
       <p>The extension uses <code>chrome.storage.local</code> for:</p>
-      <ul><li>Pet visibility and size.</li><li>Behavior style and allowed activities.</li><li>Interface language and settings schema version.</li></ul>
+      <ul><li>Pet visibility and size.</li><li>Behavior style and allowed activities.</li><li>Interface language and settings schema version.</li><li>Website hostnames (domains) you explicitly add to the cage list to hide the pet on those websites.</li></ul>
       <p>These preferences remain in the local storage of your current Chrome profile. The extension does not use <code>chrome.storage.sync</code> to sync them with a Google account or send them to the developer.</p>
+      <p>The cage list does not automatically build a browsing history. It stores only domains you explicitly select, not full URLs, paths, query parameters or visit times.</p>
       <h2>4. Data not extracted</h2>
       <p>The extension does not extract web page text, images or form entries as user data. It does not read browsing history, passwords, payment information, personal contacts or geolocation, and does not use the camera or microphone. Website access is used to display the pet, handle the interactions described above and detect fullscreen state.</p>
       <h2>5. Sharing, advertising and external services</h2>

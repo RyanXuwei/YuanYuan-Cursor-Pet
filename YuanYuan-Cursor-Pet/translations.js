@@ -63,7 +63,14 @@ globalThis.YuanYuanTranslations={
     "dateLabel": "Production date",
     "versionLabel": "Version",
     "githubLink": "Explore Ryan Hsu’s work on GitHub",
-    "logoAlt": "BitingBox Studio crowned mimic chest logo"
+    "logoAlt": "BitingBox Studio crowned mimic chest logo",
+    "cageTitle": "Dog cage list",
+    "cageAdd": "Hide Pet on this website",
+    "cageRemove": "Show Pet on this website",
+    "cageEmpty": "No websites in the cage list.",
+    "cageHint": "Right-click a page to add or remove its website. All pages on that hostname are hidden; subdomains are separate. Stored only on this device.",
+    "cageDelete": "Remove",
+    "cageRemoveAria": "Remove {host} from the cage list"
   },
   "zh-TW": {
     "appName": "YuanYuan Cursor Pet",
@@ -129,7 +136,14 @@ globalThis.YuanYuanTranslations={
     "dateLabel": "程式製作日期",
     "versionLabel": "版本",
     "githubLink": "在 GitHub 查看 Ryan Hsu 的作品",
-    "logoAlt": "BitingBox Studio 寶箱怪標誌"
+    "logoAlt": "BitingBox Studio 寶箱怪標誌",
+    "cageTitle": "狗籠名單",
+    "cageAdd": "將此網站加入狗籠名單（隱藏 Pet）",
+    "cageRemove": "將此網站移出狗籠名單（顯示 Pet）",
+    "cageEmpty": "目前沒有加入狗籠名單的網站。",
+    "cageHint": "右鍵網頁可加入或移出網站。同一網域的所有頁面都隱藏，子網域分開管理；名單只存在本機。",
+    "cageDelete": "移除",
+    "cageRemoveAria": "將 {host} 移出狗籠名單"
   },
   "zh-CN": {
     "appName": "YuanYuan Cursor Pet",
@@ -195,7 +209,14 @@ globalThis.YuanYuanTranslations={
     "dateLabel": "程序制作日期",
     "versionLabel": "版本",
     "githubLink": "在 GitHub 查看 Ryan Hsu 的作品",
-    "logoAlt": "BitingBox Studio 宝箱怪标志"
+    "logoAlt": "BitingBox Studio 宝箱怪标志",
+    "cageTitle": "狗笼名单",
+    "cageAdd": "将此网站加入狗笼名单（隐藏 Pet）",
+    "cageRemove": "将此网站移出狗笼名单（显示 Pet）",
+    "cageEmpty": "狗笼名单中还没有网站。",
+    "cageHint": "右键网页可添加或移除网站。同一域名的所有页面都会隐藏，子域名单独管理；名单仅保存在本机。",
+    "cageDelete": "移除",
+    "cageRemoveAria": "将 {host} 移出狗笼名单"
   },
   "ja": {
     "appName": "YuanYuan Cursor Pet",
@@ -261,7 +282,14 @@ globalThis.YuanYuanTranslations={
     "dateLabel": "制作日",
     "versionLabel": "バージョン",
     "githubLink": "GitHub で Ryan Hsu の作品を見る",
-    "logoAlt": "BitingBox Studio の王冠をかぶった宝箱モンスターのロゴ"
+    "logoAlt": "BitingBox Studio の王冠をかぶった宝箱モンスターのロゴ",
+    "cageTitle": "ケージリスト",
+    "cageAdd": "このサイトでペットを非表示にする",
+    "cageRemove": "このサイトでペットを表示する",
+    "cageEmpty": "登録されたサイトはありません。",
+    "cageHint": "ページを右クリックしてサイトを追加・解除できます。同じホスト名の全ページで非表示になります。サブドメインは別に管理し、リストは端末内に保存します。",
+    "cageDelete": "解除",
+    "cageRemoveAria": "{host} をケージリストから解除"
   },
   "ko": {
     "appName": "YuanYuan Cursor Pet",
@@ -327,7 +355,14 @@ globalThis.YuanYuanTranslations={
     "dateLabel": "제작일",
     "versionLabel": "버전",
     "githubLink": "GitHub에서 Ryan Hsu의 작품 보기",
-    "logoAlt": "BitingBox Studio 왕관 쓴 보물상자 괴물 로고"
+    "logoAlt": "BitingBox Studio 왕관 쓴 보물상자 괴물 로고",
+    "cageTitle": "펫 숨김 목록",
+    "cageAdd": "이 사이트에서 펫 숨기기",
+    "cageRemove": "이 사이트에서 펫 표시하기",
+    "cageEmpty": "등록된 사이트가 없습니다.",
+    "cageHint": "페이지를 우클릭하여 사이트를 추가하거나 해제하세요. 같은 호스트의 모든 페이지에서 숨기며 하위 도메인은 별도로 관리합니다. 목록은 기기에만 저장됩니다.",
+    "cageDelete": "해제",
+    "cageRemoveAria": "목록에서 {host} 해제"
   }
 };
 globalThis.YuanYuanI18n=(()=>{
