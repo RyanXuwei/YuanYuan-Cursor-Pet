@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>YuanYuan Cursor Pet</title><link rel="stylesheet" href="popup.css"></head><body>
+<header><img id="icon" src="assets/icon128.png" alt=""><div><h1 data-i18n="appName"></h1><p data-i18n="tagline"></p></div></header>
+<main><div class="interactions"><div><img src="assets/hand-open.png" alt=""><span data-i18n="liftHint"></span></div><div><img src="assets/ball.png" alt=""><span data-i18n="throwHint"></span></div><div><img src="assets/bowl-full.png" alt=""><span data-i18n="bowlHint"></span></div></div>
+<label class="switch"><span data-i18n="enabled"></span> <input id="enabled" type="checkbox"></label>
+<label><span data-i18n="size"></span> <output id="sizeValue"></output><input id="size" type="range" min="48" max="160" step="8"></label>
+<label><span data-i18n="policy"></span><select id="mischief"><option value="0"></option><option value="1"></option><option value="2"></option><option value="3"></option></select></label>
+<p id="policyHint" class="note"></p>
+<details><summary data-i18n="allowed"></summary><p class="note" data-i18n="filterNote"></p><div id="allowed"></div></details>
+<label><span data-i18n="language"></span><select id="language"></select></label>
+<p id="status" role="status"></p>
+<p class="note" data-i18n="interactionNote"></p>
+<p class="note" data-i18n="extraNote"></p>
+<section class="about" aria-labelledby="aboutHeading">
+<h2 id="aboutHeading" data-i18n="aboutTitle"></h2>
+<img id="studioLogo" src="assets/brand/BITINGBOX_no_square_border.svg" alt="" width="128" height="139">
+<p class="product" data-i18n="appName"></p>
+<p class="credit">Made by Ryan Hsu · BitingBox Studio</p>
+<dl>
+<dt data-i18n="makerLabel"></dt><dd>Ryan Hsu</dd>
+<dt data-i18n="studioLabel"></dt><dd>BitingBox Studio</dd>
+<dt data-i18n="yearLabel"></dt><dd>2026</dd>
+<dt data-i18n="dateLabel"></dt><dd><time datetime="2026-11-15">2026-11-15</time></dd>
+<dt data-i18n="versionLabel"></dt><dd id="version"></dd>
+</dl>
+<a class="github" href="https://github.com/RyanXuwei" target="_blank" rel="noopener noreferrer" data-i18n="githubLink"></a>
+</section>
+</main><script src="policy.js"></script><script src="translations.js"></script><script src="popup.js"></script></body></html>

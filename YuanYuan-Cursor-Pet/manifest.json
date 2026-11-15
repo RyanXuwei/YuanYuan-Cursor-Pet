@@ -1,0 +1,64 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "version": "1.8.0",
+  "description": "__MSG_extensionDescription__",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "__MSG_extensionName__",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "policy.js",
+        "physics.js",
+        "translations.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/yuanyuan.png",
+        "assets/yuanyuan-run.png",
+        "assets/yuanyuan-daily.png",
+        "assets/yuanyuan-moods.png",
+        "assets/yuanyuan-lifted.png",
+        "assets/yuanyuan-curious.png",
+        "assets/hand-open.png",
+        "assets/hand-grab.png",
+        "assets/ball.png",
+        "assets/bowl-empty.png",
+        "assets/bowl-full.png",
+        "assets/yuanyuan-dig.png",
+        "assets/yuanyuan-held.png"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
+  ],
+  "default_locale": "zh_TW"
+}
