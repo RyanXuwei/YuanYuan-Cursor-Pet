@@ -27,6 +27,8 @@ Download the latest ZIP from Releases (or clone), open `chrome://extensions`, en
 
 詳細說明見 [使用說明](YuanYuan-Cursor-Pet/使用說明.md)，測試紀錄見 [驗證紀錄](YuanYuan-Cursor-Pet/驗證紀錄.md)。
 
+隱私權政策 / Privacy policy：[繁體中文與 English](https://ryanxuwei.github.io/YuanYuan-Cursor-Pet/privacy.html)。
+
 ![Ball and floor](previews/ball-and-floor.png)
 
 ## 限制 / Limitations
