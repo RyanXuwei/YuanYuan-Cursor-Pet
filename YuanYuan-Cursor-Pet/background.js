@@ -36,4 +36,3 @@ chrome.runtime.onMessage.addListener((message,sender,reply)=>{
  updateSites('remove',message.hostname).then(sites=>reply({ok:true,sites}),()=>reply({ok:false}));
  return true;
 });
-
