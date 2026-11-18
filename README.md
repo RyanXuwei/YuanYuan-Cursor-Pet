@@ -32,6 +32,16 @@ Download the latest ZIP from Releases (or clone), open `chrome://extensions`, en
 
 ![Ball and floor](previews/ball-and-floor.png)
 
+## 支持 BitingBox Studio / Support
+
+[Give Me A Boba! · 請我喝珍奶](https://bitingbox.bobaboba.me)
+
+謝謝支持，讓創意繼續！🧋 Thanks for keeping my creativity going!
+
+自願支持，不影響擴充功能使用。點擊會開啟外部贊助網站。
+
+![Give Me A Boba!](previews/about-support.png)
+
 ## 限制 / Limitations
 
 - 只在一般 HTTP/HTTPS 網頁的可視範圍內活動，無法出現在 Chrome 內建頁面、其他程式或桌面。
@@ -46,7 +56,7 @@ Made by Ryan Hsu · BitingBox Studio
 - 工作室：BitingBox Studio
 - 程式製作年份：2026
 - 程式製作日期：2026-11-15
-- 目前版本：1.10.0
+- 目前版本：1.11.0
 - [在 GitHub 查看 Ryan Hsu 的作品](https://github.com/RyanXuwei)
 
 本 repo 目前未附開源授權。BitingBox Studio 標誌與圓圓角色圖像的使用範圍另依品牌規範，不隨程式碼授權。

@@ -70,7 +70,8 @@ globalThis.YuanYuanTranslations={
     "cageEmpty": "No websites in the cage list.",
     "cageHint": "Right-click a page to add or remove its website. All pages on that hostname are hidden; subdomains are separate. Stored only on this device.",
     "cageDelete": "Remove",
-    "cageRemoveAria": "Remove {host} from the cage list"
+    "cageRemoveAria": "Remove {host} from the cage list",
+    "supportNote": "Support is optional and does not affect Pet features. Opens an external support website in a new tab."
   },
   "zh-TW": {
     "appName": "YuanYuan Cursor Pet",
@@ -143,7 +144,8 @@ globalThis.YuanYuanTranslations={
     "cageEmpty": "目前沒有加入狗籠名單的網站。",
     "cageHint": "右鍵網頁可加入或移出網站。同一網域的所有頁面都隱藏，子網域分開管理；名單只存在本機。",
     "cageDelete": "移除",
-    "cageRemoveAria": "將 {host} 移出狗籠名單"
+    "cageRemoveAria": "將 {host} 移出狗籠名單",
+    "supportNote": "自願支持，不影響 Pet 功能。點擊後會在新分頁開啟外部贊助網站。"
   },
   "zh-CN": {
     "appName": "YuanYuan Cursor Pet",
@@ -216,7 +218,8 @@ globalThis.YuanYuanTranslations={
     "cageEmpty": "狗笼名单中还没有网站。",
     "cageHint": "右键网页可添加或移除网站。同一域名的所有页面都会隐藏，子域名单独管理；名单仅保存在本机。",
     "cageDelete": "移除",
-    "cageRemoveAria": "将 {host} 移出狗笼名单"
+    "cageRemoveAria": "将 {host} 移出狗笼名单",
+    "supportNote": "自愿支持，不影响 Pet 功能。点击后将在新标签页打开外部赞助网站。"
   },
   "ja": {
     "appName": "YuanYuan Cursor Pet",
@@ -289,7 +292,8 @@ globalThis.YuanYuanTranslations={
     "cageEmpty": "登録されたサイトはありません。",
     "cageHint": "ページを右クリックしてサイトを追加・解除できます。同じホスト名の全ページで非表示になります。サブドメインは別に管理し、リストは端末内に保存します。",
     "cageDelete": "解除",
-    "cageRemoveAria": "{host} をケージリストから解除"
+    "cageRemoveAria": "{host} をケージリストから解除",
+    "supportNote": "応援は任意で、ペットの機能には影響しません。外部の支援サイトを新しいタブで開きます。"
   },
   "ko": {
     "appName": "YuanYuan Cursor Pet",
@@ -362,7 +366,8 @@ globalThis.YuanYuanTranslations={
     "cageEmpty": "등록된 사이트가 없습니다.",
     "cageHint": "페이지를 우클릭하여 사이트를 추가하거나 해제하세요. 같은 호스트의 모든 페이지에서 숨기며 하위 도메인은 별도로 관리합니다. 목록은 기기에만 저장됩니다.",
     "cageDelete": "해제",
-    "cageRemoveAria": "목록에서 {host} 해제"
+    "cageRemoveAria": "목록에서 {host} 해제",
+    "supportNote": "후원은 선택 사항이며 펫 기능에 영향을 주지 않습니다. 외부 후원 사이트가 새 탭에서 열립니다."
   }
 };
 globalThis.YuanYuanI18n=(()=>{

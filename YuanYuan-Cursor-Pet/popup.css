@@ -7,3 +7,11 @@ details{border-top:1px solid #e3d7c4;padding-top:12px}summary{cursor:pointer;fon
 .about{border-top:1px solid #e3d7c4;padding-top:16px;display:grid;justify-items:center;gap:8px;text-align:center}.about h2{justify-self:start;font-size:14px;margin:0}.about img{display:block;width:128px;height:auto;object-fit:contain;margin:6px 0}.about .product{font-size:15px;font-weight:700;margin:0}.about .credit{font-size:12px;color:#6e604e;margin:0}.about dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:6px 0 0;font-size:12px;text-align:left;width:100%}.about dt{color:#897a65}.about dd{margin:0}.github{color:#7a5230;font-weight:600;font-size:13px;padding:6px 0}.github:hover{color:#4f3218}.github:focus-visible{outline:2px solid #9e7143;outline-offset:3px;border-radius:4px}
 
 .cage-row{display:flex;align-items:center;gap:8px;margin:8px 0;padding:8px;background:#f2eadb;border-radius:8px}.cage-row span{flex:1;overflow-wrap:anywhere;min-width:0;font-size:12px}.cage-row button{flex-shrink:0;border:1px solid #d4c3aa;background:#fffaf1;color:#65492f;border-radius:6px;padding:5px 8px;cursor:pointer}.cage-row button:focus-visible{outline:2px solid #9e7143;outline-offset:3px}
+
+.boba-support{width:100%;display:grid;justify-items:center;gap:10px;border-top:1px solid #e3d7c4;margin-top:6px;padding-top:18px}
+.boba{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;min-width:190px;max-width:100%;padding:8px 16px;border:none;border-radius:12px;background:#AD5138;color:#F8E0BE;font-size:14px;font-weight:600;text-decoration:none;line-height:1.4}
+.boba img{width:17px;height:24px;object-fit:contain;margin:0}
+.boba:hover{background:#98452f;color:#F8E0BE;text-decoration:none}
+.boba:focus-visible{outline:3px solid #537947;outline-offset:4px}
+.support-note,.support-thanks{max-width:270px;margin:0;font-size:11px;line-height:1.7;color:#786852;overflow-wrap:anywhere}
+.support-thanks{font-size:10px;color:#897a65}
