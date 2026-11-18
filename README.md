@@ -11,9 +11,9 @@
 
 *A little companion. A brighter browsing day.*
 
-<a href="https://github.com/RyanXuwei/YuanYuan-Cursor-Pet/releases/latest"><img src="https://img.shields.io/badge/%E4%B8%8B%E8%BC%89%E6%9C%80%E6%96%B0%E7%89%88-%E5%85%8D%E8%B2%BB%E5%AE%89%E8%A3%9D-335a49?style=for-the-badge&logo=googlechrome&logoColor=white" alt="下載最新版：免費安裝" height="44"></a>
+<a href="https://chromewebstore.google.com/detail/yuanyuan-cursor-pet/feodmaldlbhnchhncfacjnpeljcgidap"><img src="https://img.shields.io/badge/%E5%8A%A0%E5%88%B0_Chrome-%E5%85%8D%E8%B2%BB%E5%AE%89%E8%A3%9D-335a49?style=for-the-badge&logo=googlechrome&logoColor=white" alt="加到 Chrome：免費安裝" height="44"></a>
 &nbsp;
-<a href="#安裝"><img src="https://img.shields.io/badge/%E5%AE%89%E8%A3%9D%E6%95%99%E5%AD%B8-3_%E6%AD%A5%E9%A9%9F-f07a1f?style=for-the-badge" alt="安裝教學：3 步驟" height="44"></a>
+<a href="#安裝"><img src="https://img.shields.io/badge/%E5%AE%89%E8%A3%9D%E8%AA%AA%E6%98%8E-%E5%95%86%E5%BA%97_%2F_GitHub-f07a1f?style=for-the-badge" alt="安裝說明：商店或 GitHub" height="44"></a>
 
 <img src="previews/hero.png" width="820" alt="YuanYuan Cursor Pet：白色小狗、網球與飯碗">
 
@@ -58,11 +58,23 @@
 
 ## 安裝
 
+**從 Chrome 線上應用程式商店安裝（推薦）**
+
+1. 打開 [YuanYuan Cursor Pet 商店頁面](https://chromewebstore.google.com/detail/yuanyuan-cursor-pet/feodmaldlbhnchhncfacjnpeljcgidap)。
+2. 按「加到 Chrome」，再按「新增擴充功能」。
+
+重新整理任一網頁，圓圓就會出現。點工具列的「游標＋橘色小球」圖示可以開關圓圓、調大小、選行動方針與語言。商店版會自動更新。
+
+<details>
+<summary>從 GitHub Release 手動安裝（開發人員模式）</summary>
+
 1. 到 [Releases](https://github.com/RyanXuwei/YuanYuan-Cursor-Pet/releases/latest) 下載最新的 `YuanYuan-Cursor-Pet-vX.Y.Z.zip` 並解壓縮，放在固定的資料夾。
 2. 在 Chrome 網址列輸入 `chrome://extensions`，打開右上角的「開發人員模式」。
 3. 按「載入未封裝項目」，選擇解壓縮後的 `YuanYuan-Cursor-Pet` 資料夾（裡面有 `manifest.json`）。
 
-重新整理任一網頁，圓圓就會出現。點工具列的「游標＋橘色小球」圖示可以開關圓圓、調大小、選行動方針與語言。
+手動安裝不會自動更新，新版需要重新下載。請不要同時安裝商店版與手動版，否則畫面上會出現兩隻圓圓。
+
+</details>
 
 > 圓圓只在一般 HTTP/HTTPS 網頁的可視範圍內活動，不會出現在 Chrome 內建頁面、新分頁、其他程式或桌面。
 
@@ -72,7 +84,7 @@
 
 **YuanYuan Cursor Pet** puts an autonomous little white dog on your web pages. It walks, sniffs, fetches, eats treats, naps, digs and peeks from the window edge, choosing what to do based on the personality you pick. Pick it up and it sways with your mouse, throw the ball, or drag the bowl to feed it. It hides automatically in fullscreen video, can be kept off any site from the right-click menu, and speaks English, 繁體中文, 简体中文, 日本語 and 한국어. It only uses the `storage` and `contextMenus` permissions, never reads page content, and makes no external requests or tracking.
 
-**Install:** download the latest ZIP from [Releases](https://github.com/RyanXuwei/YuanYuan-Cursor-Pet/releases/latest), unzip it, open `chrome://extensions`, turn on Developer mode, choose **Load unpacked** and select the `YuanYuan-Cursor-Pet` folder.
+**Install:** get it from the [Chrome Web Store](https://chromewebstore.google.com/detail/yuanyuan-cursor-pet/feodmaldlbhnchhncfacjnpeljcgidap) and click **Add to Chrome**. To install manually instead, download the latest ZIP from [Releases](https://github.com/RyanXuwei/YuanYuan-Cursor-Pet/releases/latest), unzip it, open `chrome://extensions`, turn on Developer mode, choose **Load unpacked** and select the `YuanYuan-Cursor-Pet` folder.
 
 ## 請我喝珍奶 / Support
 
