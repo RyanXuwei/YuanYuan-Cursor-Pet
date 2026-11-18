@@ -2,3 +2,7 @@
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Chrome Web Store upload materials (local only)
+store-assets-*/
+store-upload-*/
