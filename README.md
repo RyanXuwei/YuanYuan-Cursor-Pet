@@ -115,3 +115,12 @@ Made by [Ryan Hsu](https://github.com/RyanXuwei) · BitingBox Studio　｜　[�
 本 repo 目前未附開源授權。BitingBox Studio 標誌與圓圓角色圖像的使用範圍另依品牌規範，不隨程式碼授權。
 
 </details>
+
+
+## 自訂你的寵物（v1.12.0）
+
+設定面板 → **自訂寵物／替換教學**，開啟完整匯入頁。內建一鍵複製 ChatGPT 完整提示詞，列出 8 張圖、61 格動作的檔名、宮格、尺寸與動作；支援 PNG / WebP 拖曳、檔名對應、動畫預覽、透明度檢查與本機備份。8 張備齊才可套用，能隨時恢復圓圓。角色外觀會替換；球、碗、泡泡等玩具與效果保留。
+
+[完整替換 SOP 教學](https://ryanxuwei.github.io/YuanYuan-Cursor-Pet/custom-pet.html) · [下載生成提示詞](自訂寵物完整提示詞.txt) · [下載 SOP](自訂寵物替換SOP.txt)
+
+圖片、名稱與描述僅儲存本機，不會自動送至 ChatGPT。提示詞與詳細教學目前為繁體中文；原設定面板保留五語。AI 生成結果仍需自行檢查肢體、角色一致性及宮格排列，匯入工具無法自動修復。解除安裝前請匯出 .petpack.json 備份。

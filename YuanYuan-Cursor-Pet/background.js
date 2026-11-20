@@ -1,5 +1,5 @@
 'use strict';
-importScripts('translations.js','cage.js');
+importScripts('translations.js','cage.js','pet-schema.js','pet-store.js');
 const cage=globalThis.YuanYuanCage;
 let writes=Promise.resolve(),menus=Promise.resolve();
 function updateSites(action,host){
@@ -35,4 +35,29 @@ chrome.runtime.onMessage.addListener((message,sender,reply)=>{
  if(message?.type!=='yuanyuan-cage-remove'||sender.url!==chrome.runtime.getURL('popup.html'))return;
  updateSites('remove',message.hostname).then(sites=>reply({ok:true,sites}),()=>reply({ok:false}));
  return true;
+});
+
+let petCache=null;
+async function serializedPet(){
+ const saved=await chrome.storage.local.get('customPet'),meta=saved.customPet;
+ if(!meta)return {ok:true,meta:null};
+ if(petCache?.id===meta.id)return petCache.promise;
+ const promise=(async()=>{
+  const pack=await globalThis.YuanYuanPetStore.get(meta.id);
+  if(!pack)throw Error('Custom pet pack is missing');
+  const assets={};let size=0;
+  for(const spec of globalThis.YuanYuanPetSchema.sheets){
+   const asset=pack.assets[spec.id];if(!asset?.blob)throw Error('Incomplete custom pet pack');
+   size+=asset.blob.size;if(size>globalThis.YuanYuanPetSchema.maxPackBytes)throw Error('Custom pet pack too large');
+   const bytes=new Uint8Array(await asset.blob.arrayBuffer());let binary='';
+   for(let i=0;i<bytes.length;i+=16384)binary+=String.fromCharCode(...bytes.subarray(i,i+16384));
+   assets[spec.id]={base64:btoa(binary),width:asset.width,height:asset.height};
+  }
+  return {ok:true,meta:{id:pack.id,name:pack.name},assets};
+ })();petCache={id:meta.id,promise};return promise;
+}
+chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local'&&changes.customPet)petCache=null;});
+chrome.runtime.onMessage.addListener((message,sender,reply)=>{
+ if(message?.type!=='yuanyuan-custom-pet-get'||sender.id!==chrome.runtime.id)return;
+ serializedPet().then(reply,()=>reply({ok:false,error:'Custom pet could not be loaded'}));return true;
 });

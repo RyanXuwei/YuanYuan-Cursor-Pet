@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Custom Pet Studio · YuanYuan Cursor Pet</title><link rel="icon" href="assets/icon128.png"><link rel="stylesheet" href="custom-pet.css"></head><body>
+<header><div class="brand"><img src="assets/icon128.png" width="44" height="44" alt=""><div>YuanYuan Cursor Pet<small>Custom Pet Studio</small></div></div><a href="#sop">替換 SOP / Guide</a></header>
+<main>
+<section class="intro"><div><p class="eyebrow">YOUR PET, YOUR LITTLE COMPANION</p><h1>把圓圓，換成你的寵物。</h1><p>8 張圖集 · 61 個動作格 · 全部角色外觀替換<br>生成 → 拖曳 → 檢查 → 預覽 → 套用。圖片只留在這台裝置。</p></div><aside id="active" role="status">目前：原版圓圓</aside></section>
+<section class="panel identity"><label>寵物名稱<input id="petName" maxlength="50" placeholder="例如：奶茶"></label><label>固定外觀描述<textarea id="description" maxlength="1200" rows="3" placeholder="例如：奶油色短毛貓、綠眼睛、藍色項圈、圓臉；每張保持同樣外觀。"></textarea></label></section>
+<section class="panel prompts" aria-labelledby="promptTitle"><div class="section-head"><div><h2 id="promptTitle">① 先複製提示詞，交給 ChatGPT</h2><p>建議先上傳同一張角色參考圖，再逐張生成。參考圖 00-reference.png 不需匯入。</p></div></div><div class="buttons"><button id="copyReference">複製參考圖提示詞</button><button id="copyAll" class="primary">一鍵複製完整提示詞</button><button id="downloadPrompts">下載完整提示詞 .txt</button><button id="downloadSop">下載替換 SOP .txt</button></div><details><summary>查看完整提示詞（也可手動選取複製）</summary><textarea id="promptText" readonly rows="10" aria-label="完整 ChatGPT 提示詞"></textarea></details></section>
+<section id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="選取或拖曳自訂寵物圖檔"><strong>② 把 8 張 PNG / WebP 拖到這裡</strong><span>可一次選多張，也能匯入 .petpack.json 備份。檔名不符會提示對應。</span><span>單張最多 10 MiB，單邊最多 4096 px。需真正透明背景，不能用白底或棋盤格代替。</span></section>
+<input id="batchFiles" type="file" accept=".png,.webp,.petpack.json" multiple hidden>
+<div class="section-head"><div><h2>③ 逐張檢查與預覽</h2><p>建議尺寸列在每張卡片上。匯入可按格等比例縮放，但無法自動修復錯誤格數、缺肢或不一致外觀。</p></div><label class="check"><input id="play" type="checkbox" checked>播放動畫</label></div>
+<div id="cards" class="cards"></div>
+<section class="panel" id="sop"><div class="section-head"><div><p class="eyebrow">STEP-BY-STEP</p><h2>完整替換 SOP</h2></div></div><div id="sopBody"></div><p class="note">目前生成提示詞及詳細 SOP 為繁體中文，ChatGPT 可理解此提示詞；原有設定面板的五語功能維持不變。</p></section>
+<section class="panel"><h2>④ 套用前，確認這些事</h2><ul><li>8 張圖均為同一角色、無背景且沒有跨格裁切。</li><li>預覽中的跑步、慢步與挖洞是實際肢體動作；懸空只用單張圖。</li><li>套用不會變更行動方針、語言、狗籠名單或贊助設定。</li><li>圖片只存擴充功能本機資料庫；解除安裝前請匯出備份。</li></ul></section>
+</main>
+<footer><div><strong id="progress">0 / 8 張已準備</strong><p id="message" role="status" aria-live="polite">選圖只更新草稿，尚未套用。</p></div><div class="buttons"><button id="export" class="mutation" disabled>匯出備份</button><button id="restore" class="mutation">恢復圓圓</button><button id="apply" class="primary mutation" disabled>套用我的寵物</button></div></footer>
+<dialog id="mapping"><form method="dialog"><h2>這些檔名需要對應</h2><p>請指定各圖片應放在哪一張卡片，或選擇略過。同一張卡片不能同時對應兩個檔案。</p><div id="mappingRows"></div><div class="buttons"><button value="cancel">取消</button><button id="confirmMapping" value="confirm" class="primary">確認匯入</button></div><p id="mappingError" role="alert"></p></form></dialog>
+<script src="pet-schema.js"></script><script src="pet-store.js"></script><script src="pet-images.js"></script><script src="custom-pet.js"></script>
+</body></html>

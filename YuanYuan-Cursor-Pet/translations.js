@@ -370,6 +370,7 @@ globalThis.YuanYuanTranslations={
     "supportNote": "후원은 선택 사항이며 펫 기능에 영향을 주지 않습니다. 외부 후원 사이트가 새 탭에서 열립니다."
   }
 };
+Object.entries({en:['Customize pet','Current pet: ','Original YuanYuan'],'zh-TW':['自訂寵物／替換教學','目前寵物：','原版圓圓'],'zh-CN':['自定义宠物／替换教程','当前宠物：','原版圆圆'],ja:['ペットのカスタマイズ','現在のペット：','オリジナル'],ko:['반려동물 꾸미기','현재 펫: ','기본 위안위안']}).forEach(([code,v])=>Object.assign(globalThis.YuanYuanTranslations[code],{customizePet:v[0],customActive:v[1],customDefault:v[2]}));
 globalThis.YuanYuanI18n=(()=>{
   'use strict';
   const all=globalThis.YuanYuanTranslations,codes=Object.keys(all);

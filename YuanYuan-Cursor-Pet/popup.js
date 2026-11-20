@@ -11,7 +11,7 @@ async function save(change){
  render();
 }
 function render(){
- const tr=t();renderCage(tr);
+ const tr=t();renderCage(tr);$('customPetStatus').textContent=tr.customActive+(settings.customPet?.name||tr.customDefault);
  document.documentElement.lang=htmlLang[i18n.resolve(settings.language)];document.title=tr.appName;$('icon').alt=tr.iconAlt;$('studioLogo').alt=tr.logoAlt;$('version').textContent=chrome.runtime.getManifest().version;
  for(const el of document.querySelectorAll('[data-i18n]'))el.textContent=tr[el.dataset.i18n];
  [...$('mischief').options].forEach((o,i)=>o.textContent=tr.profiles[i]);
@@ -65,5 +65,6 @@ function renderCage(tr){
 }
 chrome.storage.onChanged.addListener((changes,area)=>{
  if(area!=='local')return;
+ if(changes.customPet){settings.customPet=changes.customPet.newValue;render();}
  if(changes.cageSites){settings.cageSites=globalThis.YuanYuanCage.normalize(changes.cageSites.newValue);render();}
 });
