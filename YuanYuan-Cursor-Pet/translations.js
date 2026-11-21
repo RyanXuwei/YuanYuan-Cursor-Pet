@@ -371,6 +371,7 @@ globalThis.YuanYuanTranslations={
   }
 };
 Object.entries({en:['Customize pet','Current pet: ','Original YuanYuan'],'zh-TW':['自訂寵物／替換教學','目前寵物：','原版圓圓'],'zh-CN':['自定义宠物／替换教程','当前宠物：','原版圆圆'],ja:['ペットのカスタマイズ','現在のペット：','オリジナル'],ko:['반려동물 꾸미기','현재 펫: ','기본 위안위안']}).forEach(([code,v])=>Object.assign(globalThis.YuanYuanTranslations[code],{customizePet:v[0],customActive:v[1],customDefault:v[2]}));
+Object.entries({en:['Your custom pet','Replace all pet animations with your own character. Includes ChatGPT prompts, original YuanYuan comparisons and an import guide.'],'zh-TW':['自訂寵物外觀','將所有寵物動作換成自己的角色。內附 ChatGPT 生成提示詞、圓圓原版對照與圖片匯入教學。'],'zh-CN':['自定义宠物外观','将所有宠物动作换成自己的角色。内附 ChatGPT 生成提示词、圆圆原版对照与图片导入教程。'],ja:['ペットの見た目を変更','すべての動作を自分のキャラクターに変更。ChatGPT 用プロンプト、圓圓の比較プレビュー、画像の読み込みガイドを用意。'],ko:['나만의 펫 꾸미기','모든 펫 동작을 나만의 캐릭터로 바꾸세요. ChatGPT 프롬프트, 원본 비교 미리보기, 이미지 가져오기 안내를 제공합니다.']}).forEach(([code,v])=>Object.assign(globalThis.YuanYuanTranslations[code],{customPetTitle:v[0],customPetIntro:v[1]}));
 globalThis.YuanYuanI18n=(()=>{
   'use strict';
   const all=globalThis.YuanYuanTranslations,codes=Object.keys(all);
