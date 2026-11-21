@@ -127,3 +127,6 @@ Made by [Ryan Hsu](https://github.com/RyanXuwei) · BitingBox Studio　｜　[�
 
 
 v1.12.1：每張匯入卡附原版圓圓對照動畫與完整宮格，左右同步播放、切換動作列及拖滑桿逐格檢查，方便比對生成結果的姿勢、順序與構圖。
+
+
+v1.12.3：修正更新／重新載入後舊分頁出現 Extension context invalidated。舊角色偵測失效後會停止並清除；更新後請重新整理原本開啟的網頁。

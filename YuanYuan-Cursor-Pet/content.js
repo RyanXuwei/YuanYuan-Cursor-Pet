@@ -1,6 +1,11 @@
 (() => {
 'use strict';
 if(document.getElementById('yuanyuan-cursor-pet'))return;
+// Resolve bundled URLs while this extension context is valid; animation uses only cached strings.
+let assetBase;try{if(!chrome.runtime?.id)return;assetBase=chrome.runtime.getURL('assets/');}catch{return;}
+const assetURL=file=>assetBase+file;
+let disposed=false;const lifecycle=new AbortController();
+function contextAlive(){try{return !disposed&&Boolean(chrome.runtime?.id);}catch{return false;}}
 const policy=globalThis.YuanYuanPolicy;
 const defaults={enabled:true,size:96,mischief:2,language:'auto',customPet:null,cageSites:[],allowed:[...policy.ids]};
 const i18n=globalThis.YuanYuanI18n;
@@ -42,8 +47,8 @@ const peeLayer=document.createElementNS(svgNS,'svg');peeLayer.classList.add('pee
 const urine=document.createElementNS(svgNS,'path');urine.setAttribute('d','M 90 150 Q 70 174 34 193');urine.setAttribute('fill','none');urine.setAttribute('stroke','#e1bd37');urine.setAttribute('stroke-width','2.4');urine.setAttribute('stroke-linecap','round');urine.setAttribute('stroke-dasharray','4 3');
 const stain=document.createElementNS(svgNS,'ellipse');stain.setAttribute('cx','34');stain.setAttribute('cy','195');stain.setAttribute('ry','3.3');stain.setAttribute('fill','#dec65b');peeLayer.append(stain,urine);shadow.append(peeLayer);peeLayer.style.display='none';
 const bowl=document.createElement('button');bowl.className='bowl';bowl.type='button';bowl.style.cssText='position:absolute;width:58px;height:50px;border:0;background:transparent center/contain no-repeat;pointer-events:auto;cursor:pointer;padding:0;filter:url(#yuanyuan-alpha-clean)';shadow.append(bowl);
-toy.style.background='transparent center/contain no-repeat';toy.style.backgroundImage='url("'+chrome.runtime.getURL('assets/ball.png')+'")';toy.style.border='0';toy.style.filter='url(#yuanyuan-alpha-clean)';
-pet.style.cursor='url("'+chrome.runtime.getURL('assets/hand-open.png')+'") 16 16, grab';
+toy.style.background='transparent center/contain no-repeat';toy.style.backgroundImage='url("'+assetURL('ball.png')+'")';toy.style.border='0';toy.style.filter='url(#yuanyuan-alpha-clean)';
+pet.style.cursor='url("'+assetURL('hand-open.png')+'") 16 16, grab';
 style.textContent+='.bubble{position:absolute;pointer-events:auto;cursor:pointer;border-radius:50%;clip-path:circle(50%);border:1.5px solid #c8eafa99;background:radial-gradient(ellipse at 28% 18%,#fff9 0%,#fff0 15%),radial-gradient(ellipse at 75% 82%,#f5b6e433,#def8ff08 45%,#8ac9ed26 85%,#efffff99 100%);box-shadow:inset 4px 5px 14px #fff5,inset -4px -4px 15px #c0b4ef33,0 0 7px #b5e9ff33;padding:0;appearance:none}.bubble::before{content:"";position:absolute;left:20%;top:12%;width:27%;height:11%;border-top:3px solid #ffffffe0;border-radius:50%;transform:rotate(-30deg)}.bubble[hidden]{display:none}.bubble:focus-visible{outline:3px solid #80b4e3;outline-offset:4px}';
 const bubbleButton=document.createElement('button');bubbleButton.className='bubble';bubbleButton.type='button';bubbleButton.hidden=true;shadow.append(bubbleButton);
 const burst=document.createElement('div');burst.style.cssText='position:absolute;pointer-events:none;border:3px dotted #c5ecff;border-radius:50%;opacity:0;box-sizing:border-box';burst.setAttribute('aria-hidden','true');shadow.append(burst);
@@ -95,9 +100,18 @@ const currentHostname=globalThis.YuanYuanCage.hostname(location.href);
 function isCaged(){return settings.cageSites.includes(currentHostname);}
 function showHost(){const caged=isCaged();host.style.setProperty('display',settings.enabled&&!fsHidden&&!caged&&!customPending?'block':'none','important');host.dataset.fullscreenHidden=String(fsHidden);host.dataset.caged=String(caged);}
 function updateFullscreen(){const v=isFullscreen();if(v===fsHidden)return;fsHidden=v;if(fsHidden){dogDrag=null;drag=null;bowlDrag=null;stop();}showHost();if(!fsHidden)start();}
-function start(){if(settings.enabled&&!customPending&&!fsHidden&&!isCaged()&&!document.hidden&&!raf)raf=requestAnimationFrame(tick);}
+function dispose(){
+ if(disposed)return;disposed=true;++customToken;stop();clearInterval(contextWatch);lifecycle.abort();
+ try{chrome.storage.onChanged.removeListener(onSettingsChanged);}catch{/* The old extension API may already be unavailable. */}
+ if(customBitmaps)Object.values(customBitmaps).forEach(bitmap=>bitmap.close());customBitmaps=null;
+ dogDrag=null;drag=null;bowlDrag=null;host.remove();
+}
+// Also retire hidden or caged tabs, which have no animation frames to notice invalidation.
+const contextWatch=setInterval(()=>{if(!contextAlive())dispose();},1000);
+function start(){if(!contextAlive()){dispose();return;}if(settings.enabled&&!customPending&&!fsHidden&&!isCaged()&&!document.hidden&&!raf)raf=requestAnimationFrame(tick);}
 function localize(){const t=i18n.get(settings.language);pet.setAttribute('aria-label',t.petAria);toy.title=t.ballTitle;toy.setAttribute('aria-label',t.ballAria);bowl.title=t.bowlTitle;bowl.setAttribute('aria-label',t.bowlAria);bubbleButton.setAttribute('aria-label',t.bubbleAria);}
 async function loadCustomPet(meta){
+ if(!contextAlive()){dispose();return;}
  const token=++customToken;customPending=Boolean(meta);stop();showHost();
  if(!meta){if(customBitmaps)Object.values(customBitmaps).forEach(b=>b.close());customBitmaps=null;customIdentity='';renderKey='';customPending=false;host.dataset.customPet='false';showHost();start();return;}
  const loaded={};
@@ -133,20 +147,21 @@ function drawCustom(sheet,row,frame){
  customCanvas.style.display='block';sprite.style.backgroundImage='none';sprite.style.filter='none';host.dataset.customSheet=id;
 }
 function apply(value){
+ if(!contextAlive()){dispose();return;}
  const oldCustom=settings.customPet?.id;
  settings={...defaults,...value};settings.cageSites=globalThis.YuanYuanCage.normalize(settings.cageSites);settings.size=clamp(Number(settings.size)||96,48,160);settings.mischief=Math.round(clamp(Number(settings.mischief)||0,0,3));settings.allowed=Array.isArray(settings.allowed)?settings.allowed.filter(id=>policy.ids.includes(id)):[...policy.ids];
  if(oldCustom!==settings.customPet?.id)loadCustomPet(settings.customPet);
  showHost();localize();pet.style.width=settings.size+'px';pet.style.height=settings.size*208/192+'px';ball.r=Math.max(9,Math.round(settings.size*.4/2));const oldW=parseFloat(bowl.style.width)||58,oldH=parseFloat(bowl.style.height)||50;bowl.style.width=bowlW()+'px';bowl.style.height=bowlH()+'px';bowlPos.x+=oldW-bowlW();bowlPos.y+=oldH-bowlH();
- dogDrag=null;drag=null;bowlDrag=null;pet.style.cursor='url("'+chrome.runtime.getURL('assets/hand-open.png')+'") 16 16, grab';if(ball.phase==='drag'){ball.phase='out';dropBallHere();}choose('idle',performance.now());until=performance.now()+1200;stop();start();
+ dogDrag=null;drag=null;bowlDrag=null;pet.style.cursor='url("'+assetURL('hand-open.png')+'") 16 16, grab';if(ball.phase==='drag'){ball.phase='out';dropBallHere();}choose('idle',performance.now());until=performance.now()+1200;stop();start();
 }
 function tick(now){
- raf=0;if(!settings.enabled||customPending||fsHidden||isCaged()||document.hidden)return;const dt=Math.min((now-(last||now))/1000,.05);last=now;
+ raf=0;if(!contextAlive()){dispose();return;}if(!settings.enabled||customPending||fsHidden||isCaged()||document.hidden)return;const dt=Math.min((now-(last||now))/1000,.05);last=now;
  if(state==='bubble'&&now>until)popBubble();
  if(!dogDrag&&now>until){if(state==='treat'&&eatReady)bowlFull=false;if(state==='idle'){choose(nextAuto(now),now);if(state==='idle')until=now+3000;}else{choose('idle',now);until=now+policy.gapMs(settings.mischief);}}
  const w=settings.size,h=w*208/192,{mx,my}=bounds(),t=(now-started)/1000;
  if(!dogDrag&&bowlFull&&state==='idle'&&now>foodPending&&settings.allowed.includes('treat')&&now-(lastUsed.treat??-Infinity)>=policy.cooldownMs('treat',settings.mischief))choose('treat',now);
  if(['flight','out','done'].includes(ball.phase))globalThis.YuanYuanPhysics.advance(ball,dt,innerWidth,innerHeight);
- const food=foodPosition();bowl.style.transform='translate('+food.x+'px,'+food.y+'px)';bowl.style.backgroundImage='url("'+chrome.runtime.getURL(bowlFull?'assets/bowl-full.png':'assets/bowl-empty.png')+'")';
+ const food=foodPosition();bowl.style.transform='translate('+food.x+'px,'+food.y+'px)';bowl.style.backgroundImage='url("'+assetURL(bowlFull?'bowl-full.png':'bowl-empty.png')+'")';
  bowl.dataset.full=String(bowlFull);bowl.dataset.dragging=String(Boolean(bowlDrag?.moved));
 
  let tx=mouse.x+28,ty=mouse.y+28,r=0,jump=0,pose=poses[state],slow=false;
@@ -202,7 +217,7 @@ const moving=!reduced&&speed>12&&step>0;
  if(customBitmaps&&sheet==='yuanyuan.png'&&state==='idle')f=Math.floor(now/220)%4;
  const key=customIdentity+':'+sheet+':'+rr+':'+f;
  if(key!==renderKey&&customBitmaps){drawCustom(sheet,rr,f);renderKey=key;}
- else if(key!==renderKey){customCanvas.style.display='none';sprite.style.filter='url(#yuanyuan-alpha-clean)';sprite.style.backgroundImage='url("'+chrome.runtime.getURL('assets/'+sheet)+'")';sprite.style.backgroundSize=cols*192+'px '+rows*208+'px';sprite.style.backgroundPosition=-f*192+'px '+-rr*208+'px';renderKey=key;}
+ else if(key!==renderKey){customCanvas.style.display='none';sprite.style.filter='url(#yuanyuan-alpha-clean)';sprite.style.backgroundImage='url("'+assetURL(sheet)+'")';sprite.style.backgroundSize=cols*192+'px '+rows*208+'px';sprite.style.backgroundPosition=-f*192+'px '+-rr*208+'px';renderKey=key;}
  const closeScale=state==='curious'&&closeReady?1+Math.min(1,reduced?1:(now-closeReady)/650,reduced?1:(until-now)/600)*(Math.min(280,innerWidth*.65)/w-1):1;
  const drawW=w*closeScale,drawH=h*closeScale;
  sprite.style.transform='scale('+drawW/192+') '+(now<landingUntil&&!reduced?'scaleY(.96) ':'')+(flip?'translateX(192px) scaleX(-1)':'');
@@ -243,10 +258,10 @@ pet.addEventListener('pointerdown',e=>{
  if(e.button!==0)return;e.stopPropagation();pet.setPointerCapture(e.pointerId);
  const rect=pet.getBoundingClientRect();dogDrag={id:e.pointerId,ox:(e.clientX-rect.left)*settings.size/rect.width,oy:(e.clientY-rect.top)*settings.size*208/192/rect.height};
  holdMotion={angle:0,velocity:0,target:0,lastX:e.clientX,lastT:performance.now()};
- choose('held',performance.now());pet.style.transformOrigin=(dogDrag.ox/settings.size*100)+'% '+(dogDrag.oy/(settings.size*208/192)*100)+'%';pet.style.cursor='url("'+chrome.runtime.getURL('assets/hand-grab.png')+'") 16 16, grabbing';
+ choose('held',performance.now());pet.style.transformOrigin=(dogDrag.ox/settings.size*100)+'% '+(dogDrag.oy/(settings.size*208/192)*100)+'%';pet.style.cursor='url("'+assetURL('hand-grab.png')+'") 16 16, grabbing';
 });
 pet.addEventListener('pointermove',e=>{if(dogDrag?.id===e.pointerId){e.stopPropagation();const {mx,my}=bounds(),now=performance.now(),dt=Math.max(.008,(now-holdMotion.lastT)/1000),vx=(e.clientX-holdMotion.lastX)/dt;holdMotion.target=clamp(vx*.025,-24,24);holdMotion.lastX=e.clientX;holdMotion.lastT=now;x=clamp(e.clientX-dogDrag.ox,0,mx);y=clamp(e.clientY-dogDrag.oy,0,my);}});
-function dropDog(e){if(dogDrag?.id!==e.pointerId)return;e.stopPropagation();dogDrag=null;fall={vy:0,targetY:Math.min(bounds().my,y+Math.max(18,settings.size*.28))};choose('dropFall',performance.now());until=Infinity;pet.style.transformOrigin='50% 50%';pet.style.cursor='url("'+chrome.runtime.getURL('assets/hand-open.png')+'") 16 16, grab';}
+function dropDog(e){if(dogDrag?.id!==e.pointerId)return;e.stopPropagation();dogDrag=null;fall={vy:0,targetY:Math.min(bounds().my,y+Math.max(18,settings.size*.28))};choose('dropFall',performance.now());until=Infinity;pet.style.transformOrigin='50% 50%';pet.style.cursor='url("'+assetURL('hand-open.png')+'") 16 16, grab';}
 pet.addEventListener('pointerup',dropDog);pet.addEventListener('pointercancel',dropDog);pet.addEventListener('click',e=>e.stopPropagation());
 pet.addEventListener('lostpointercapture',dropDog);
 toy.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.stopPropagation();toy.setPointerCapture(e.pointerId);const now=performance.now();drag={id:e.pointerId,x:e.clientX,y:e.clientY,samples:[{x:e.clientX,y:e.clientY,t:now}]};ball.phase='drag';});
@@ -255,9 +270,16 @@ toy.addEventListener('pointerup',e=>{if(!drag||drag.id!==e.pointerId)return;e.st
 toy.addEventListener('pointercancel',()=>{drag=null;ball.phase='out';dropBallHere();});toy.addEventListener('click',e=>e.stopPropagation());
 toy.addEventListener('lostpointercapture',e=>{if(drag?.id===e.pointerId){drag=null;ball.phase='out';dropBallHere();}});
 toy.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();throwBall(ball.x,ball.y,performance.now(),(ball.x>innerWidth/2?-1:1)*350,0);}});
-addEventListener('pointermove',e=>{mouse={x:e.clientX,y:e.clientY};lastMove=performance.now();if(state==='sleep'){choose('idle',lastMove);until=lastMove+1500;}},{passive:true});
-for(const type of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(type,updateFullscreen);fsQuery.addEventListener('change',updateFullscreen);addEventListener('resize',updateFullscreen);updateFullscreen();
-document.addEventListener('visibilitychange',()=>{stop();start();});
-chrome.storage.local.get(null).then(saved=>{const allowed=policy.allowedFor(saved);apply({...saved,allowed});if(saved.behaviorSchema!==2)chrome.storage.local.set({allowed,behaviorSchema:2});});
-chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local'){const next={...settings};for(const key of Object.keys(defaults))if(changes[key])next[key]=changes[key].newValue??defaults[key];apply(next);}});
+addEventListener('pointermove',e=>{mouse={x:e.clientX,y:e.clientY};lastMove=performance.now();if(state==='sleep'){choose('idle',lastMove);until=lastMove+1500;}},{passive:true,signal:lifecycle.signal});
+for(const type of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(type,updateFullscreen,{signal:lifecycle.signal});fsQuery.addEventListener('change',updateFullscreen,{signal:lifecycle.signal});addEventListener('resize',updateFullscreen,{signal:lifecycle.signal});updateFullscreen();
+document.addEventListener('visibilitychange',()=>{stop();start();},{signal:lifecycle.signal});
+function onSettingsChanged(changes,area){if(!contextAlive()){dispose();return;}if(area==='local'){const next={...settings};for(const key of Object.keys(defaults))if(changes[key])next[key]=changes[key].newValue??defaults[key];apply(next);}}
+async function initialize(){
+ try{
+  const saved=await chrome.storage.local.get(null);if(!contextAlive()){dispose();return;}
+  const allowed=policy.allowedFor(saved);apply({...saved,allowed});
+  if(saved.behaviorSchema!==2)await chrome.storage.local.set({allowed,behaviorSchema:2});
+ }catch(error){if(!contextAlive()){dispose();return;}dispose();console.error('YuanYuan Cursor Pet initialization failed:',error);}
+}
+try{chrome.storage.onChanged.addListener(onSettingsChanged);initialize();}catch(error){if(!contextAlive())dispose();else throw error;}
 })();
