@@ -1,5 +1,5 @@
 'use strict';
-importScripts('translations.js','cage.js','pet-schema.js','pet-store.js');
+importScripts('translations.js','cage.js','pet-schema.js','pet-store.js','news-core.js','news-text.js','news-worker.js');
 const cage=globalThis.YuanYuanCage;
 let writes=Promise.resolve(),menus=Promise.resolve();
 function updateSites(action,host){

@@ -17,3 +17,5 @@ details{border-top:1px solid #e3d7c4;padding-top:12px}summary{cursor:pointer;fon
 .support-thanks{font-size:10px;color:#897a65}
 
 .custom-pet-feature{display:grid;gap:10px;padding:16px;border:1px solid #ddcfbb;border-radius:12px;background:#f4efdf}.custom-pet-feature h2{font-size:14px;margin:0}.custom-pet-link{display:flex;justify-content:center;align-items:center;min-height:44px;padding:0 12px;border:1px solid #b7c4a9;border-radius:9px;background:#e5eddb;color:#395d38;font-size:13px;font-weight:600;text-decoration:none;text-align:center}.custom-pet-link:hover{background:#dbe7ce}.custom-pet-link:focus-visible{outline:2px solid #9e7143;outline-offset:3px}#customPetStatus{overflow-wrap:anywhere}
+
+.news-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px}.news-toggle input{flex-shrink:0}.news-popup-actions{display:grid;gap:8px}.news-popup-actions button{border:1px solid #c4cbb7;border-radius:8px;padding:9px;background:#fffaf1;color:#395d38;cursor:pointer;font:600 12px system-ui}.news-popup-actions button:disabled{opacity:.5;cursor:wait}.news-popup-actions button:focus-visible{outline:2px solid #9e7143;outline-offset:3px}

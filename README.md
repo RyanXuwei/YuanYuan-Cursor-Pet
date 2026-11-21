@@ -39,7 +39,7 @@
 | 🎬 **看影片不打擾** | 影片、YouTube 或 F11 全螢幕時自動躲起來，離開全螢幕再回來。 |
 | 🏠 **想專心就關進狗籠** | 在網頁按右鍵，就能讓圓圓不要出現在這個網站。 |
 | 🌏 **五種語言** | 繁體中文、简体中文、English、日本語、한국어，跟著瀏覽器語言自動切換。 |
-| 🔒 **安心又輕巧** | 只用 `storage` 與 `contextMenus` 權限，不讀取網頁內容，沒有外部請求、廣告或追蹤。 |
+| 🔒 **安心又輕巧** | 必要權限仍為 storage 與 contextMenus，不讀取網頁內容、沒有廣告追蹤；預設不連網。啟用寵物消息後，才使用可選的 Google News 存取權抓取 RSS。 |
 
 <div align="center">
 
@@ -91,7 +91,7 @@
 
 ## English
 
-**YuanYuan Cursor Pet** puts an autonomous little white dog on your web pages. It walks, sniffs, fetches, eats treats, naps, digs and peeks from the window edge, choosing what to do based on the personality you pick. Pick it up and it sways with your mouse, throw the ball, or drag the bowl to feed it. It hides automatically in fullscreen video, can be kept off any site from the right-click menu, and speaks English, 繁體中文, 简体中文, 日本語 and 한국어. It only uses the `storage` and `contextMenus` permissions, never reads page content, and makes no external requests or tracking.
+**YuanYuan Cursor Pet** puts an autonomous little white dog on your web pages. It walks, sniffs, fetches, eats treats, naps, digs and peeks from the window edge, choosing what to do based on the personality you pick. Pick it up and it sways with your mouse, throw the ball, or drag the bowl to feed it. It hides automatically in fullscreen video, can be kept off any site from the right-click menu, and speaks English, 繁體中文, 简体中文, 日本語 and 한국어. Required permissions remain storage and contextMenus. It never reads page content and has no advertising tracking. Optional pet news, off by default, requests access to Google News RSS; cache and read status stay in this Chrome profile.
 
 **Install:** get it from the [Chrome Web Store](https://chromewebstore.google.com/detail/yuanyuan-cursor-pet/feodmaldlbhnchhncfacjnpeljcgidap) and click **Add to Chrome**. To install manually instead, download the latest ZIP from [Releases](https://github.com/RyanXuwei/YuanYuan-Cursor-Pet/releases/latest), unzip it, open `chrome://extensions`, turn on Developer mode, choose **Load unpacked** and select the `YuanYuan-Cursor-Pet` folder.
 
@@ -139,3 +139,20 @@ v1.12.1：每張匯入卡附原版圓圓對照動畫與完整宮格，左右同�
 
 
 v1.12.3：修正更新／重新載入後舊分頁出現 Extension context invalidated。舊角色偵測失效後會停止並清除；更新後請重新整理原本開啟的網頁。
+
+
+## 圓圓叼回來的消息（v1.13.0）
+
+在設定的「圓圓叼回來的消息」開啟並允許 Google News 存取。圓圓沿用現有動畫，嘴邊以 HTML／CSS 小報紙帶著未讀數；點一下展開資訊卡，不說人話、不新增圖片序列。也可從設定開啟獨立閱讀頁。
+
+- 每天首次使用時搜尋，以電腦當地日期篩選當日發布的文章，每次最多 2 則；沒合適消息就留空。
+- 四類優先順序：寵物時事 → 寵物旅遊 → 寵物展覽 → 獸醫相關閱讀。固定關鍵字與規則篩選，不使用 AI 搜尋或摘要。
+- 依設定面板語言選新聞版：繁／簡中文採台灣版，English 採美國版，日本語採日本版，한국어採韓國版。這是新聞版選擇，不保證每篇事件都發生在該地；標題保留原文。
+- 點原文或「標為已讀」可收起未讀；手動「再找消息」會跳過已讀，刷新間隔至少 1 分鐘。
+- 每個 Chrome 設定檔各自保存快取與已讀，不跨電腦同步。同一設定檔的分頁共用結果，不各自重複搜尋。斷線保留今日快取；昨天的消息不冒充今日消息。
+- 使用 Google News RSS，不需帳號、API Key 或自有伺服器。來源可用性可能變動，失敗會顯示狀態；不抓全文、不自動載入新聞圖片。
+- 獨立閱讀頁提供「檢查本機 AI」與 Chrome 內建標題翻譯入口。僅使用已備妥的本機 Translator 模型，不自動下載、不呼叫付費 AI；不支援時照常閱讀原文，不判斷新聞真偽或醫療內容。
+
+[新聞規格與操作教學](YuanYuan-Cursor-Pet/寵物消息使用說明.md) · [隱私說明](https://ryanxuwei.github.io/YuanYuan-Cursor-Pet/privacy.html)
+
+GitHub 發布包為 v1.13.0；Chrome 商店更新仍需另行送審。

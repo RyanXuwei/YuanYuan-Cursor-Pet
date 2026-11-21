@@ -4,7 +4,7 @@ if(document.getElementById('yuanyuan-cursor-pet'))return;
 // Resolve bundled URLs while this extension context is valid; animation uses only cached strings.
 let assetBase;try{if(!chrome.runtime?.id)return;assetBase=chrome.runtime.getURL('assets/');}catch{return;}
 const assetURL=file=>assetBase+file;
-let disposed=false;const lifecycle=new AbortController();
+let newsCarrier=null;let disposed=false;const lifecycle=new AbortController();
 function contextAlive(){try{return !disposed&&Boolean(chrome.runtime?.id);}catch{return false;}}
 const policy=globalThis.YuanYuanPolicy;
 const defaults={enabled:true,size:96,mischief:2,language:'auto',customPet:null,cageSites:[],allowed:[...policy.ids]};
@@ -104,7 +104,7 @@ function dispose(){
  if(disposed)return;disposed=true;++customToken;stop();clearInterval(contextWatch);lifecycle.abort();
  try{chrome.storage.onChanged.removeListener(onSettingsChanged);}catch{/* The old extension API may already be unavailable. */}
  if(customBitmaps)Object.values(customBitmaps).forEach(bitmap=>bitmap.close());customBitmaps=null;
- dogDrag=null;drag=null;bowlDrag=null;host.remove();
+ dogDrag=null;drag=null;bowlDrag=null;newsCarrier?.destroy();host.remove();
 }
 // Also retire hidden or caged tabs, which have no animation frames to notice invalidation.
 const contextWatch=setInterval(()=>{if(!contextAlive())dispose();},1000);
@@ -252,6 +252,7 @@ const moving=!reduced&&speed>12&&step>0;
  toy.style.width=toy.style.height=ball.r*2+'px';toy.style.transform='translate('+clamp(ball.x-ball.r,0,Math.max(0,innerWidth-ball.r*2))+'px,'+clamp(ball.y-ball.r,0,Math.max(0,innerHeight-ball.r*2))+'px)';
  host.dataset.ballFloor=String(ballFloor());host.dataset.ballR=String(ball.r);
  host.dataset.ballX=String(ball.x);host.dataset.ballY=String(ball.y);host.dataset.ballVx=String(ball.vx);host.dataset.ballVy=String(ball.vy);
+ newsCarrier?.update({x:drawX,y:drawY,w:drawW,h:drawH,flip,moving,state,visible:settings.enabled&&!fsHidden&&!isCaged()});
  raf=requestAnimationFrame(tick);
 }
 pet.addEventListener('pointerdown',e=>{
@@ -273,7 +274,7 @@ toy.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDef
 addEventListener('pointermove',e=>{mouse={x:e.clientX,y:e.clientY};lastMove=performance.now();if(state==='sleep'){choose('idle',lastMove);until=lastMove+1500;}},{passive:true,signal:lifecycle.signal});
 for(const type of ['fullscreenchange','webkitfullscreenchange'])document.addEventListener(type,updateFullscreen,{signal:lifecycle.signal});fsQuery.addEventListener('change',updateFullscreen,{signal:lifecycle.signal});addEventListener('resize',updateFullscreen,{signal:lifecycle.signal});updateFullscreen();
 document.addEventListener('visibilitychange',()=>{stop();start();},{signal:lifecycle.signal});
-function onSettingsChanged(changes,area){if(!contextAlive()){dispose();return;}if(area==='local'){const next={...settings};for(const key of Object.keys(defaults))if(changes[key])next[key]=changes[key].newValue??defaults[key];apply(next);}}
+function onSettingsChanged(changes,area){if(!contextAlive()){dispose();return;}if(area==='local'&&Object.keys(defaults).some(key=>changes[key])){const next={...settings};for(const key of Object.keys(defaults))if(changes[key])next[key]=changes[key].newValue??defaults[key];apply(next);}}
 async function initialize(){
  try{
   const saved=await chrome.storage.local.get(null);if(!contextAlive()){dispose();return;}
@@ -281,5 +282,6 @@ async function initialize(){
   if(saved.behaviorSchema!==2)await chrome.storage.local.set({allowed,behaviorSchema:2});
  }catch(error){if(!contextAlive()){dispose();return;}dispose();console.error('YuanYuan Cursor Pet initialization failed:',error);}
 }
+newsCarrier=globalThis.YuanYuanNewsCarrier?.mount(shadow,lifecycle.signal);
 try{chrome.storage.onChanged.addListener(onSettingsChanged);initialize();}catch(error){if(!contextAlive())dispose();else throw error;}
 })();

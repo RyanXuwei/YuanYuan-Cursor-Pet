@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "1.12.3",
+  "version": "1.13.0",
   "description": "__MSG_extensionDescription__",
   "permissions": [
     "storage",
@@ -34,6 +34,10 @@
         "physics.js",
         "translations.js",
         "cage.js",
+        "news-core.js",
+        "news-text.js",
+        "news-view.js",
+        "news-carrier.js",
         "content.js"
       ],
       "run_at": "document_idle"
@@ -65,5 +69,8 @@
   "default_locale": "zh_TW",
   "background": {
     "service_worker": "background.js"
-  }
+  },
+  "optional_host_permissions": [
+    "https://news.google.com/*"
+  ]
 }
