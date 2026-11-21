@@ -15,6 +15,15 @@
 &nbsp;
 <a href="#安裝"><img src="https://img.shields.io/badge/%E5%AE%89%E8%A3%9D%E8%AA%AA%E6%98%8E-%E5%95%86%E5%BA%97_%2F_GitHub-f07a1f?style=for-the-badge" alt="安裝說明：商店或 GitHub" height="44"></a>
 
+### 🎬 宣傳短片｜圓圓，不可以瑟瑟！
+
+床上管不住？那就送進你的瀏覽器。<br>
+看圓圓被抓包，再把這隻調皮的小狗帶到你的網頁上。
+
+<a href="https://www.youtube.com/watch?v=LFQuWQH0gLQ"><img src="previews/promo-youtube.jpg" width="820" alt="點擊觀看 YouTube 宣傳短片：抓「姦」行動，監視器拍到圓圓的不乖，所以我把牠送進瀏覽器"></a>
+
+**[▶ 到 YouTube 看完整宣傳影片](https://www.youtube.com/watch?v=LFQuWQH0gLQ)**
+
 <img src="previews/hero.png" width="820" alt="YuanYuan Cursor Pet：白色小狗、網球與飯碗">
 
 </div>
