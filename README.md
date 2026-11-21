@@ -124,3 +124,6 @@ Made by [Ryan Hsu](https://github.com/RyanXuwei) · BitingBox Studio　｜　[�
 [完整替換 SOP 教學](https://ryanxuwei.github.io/YuanYuan-Cursor-Pet/custom-pet.html) · [下載生成提示詞](自訂寵物完整提示詞.txt) · [下載 SOP](自訂寵物替換SOP.txt)
 
 圖片、名稱與描述僅儲存本機，不會自動送至 ChatGPT。提示詞與詳細教學目前為繁體中文；原設定面板保留五語。AI 生成結果仍需自行檢查肢體、角色一致性及宮格排列，匯入工具無法自動修復。解除安裝前請匯出 .petpack.json 備份。
+
+
+v1.12.1：每張匯入卡附原版圓圓對照動畫與完整宮格，左右同步播放、切換動作列及拖滑桿逐格檢查，方便比對生成結果的姿勢、順序與構圖。

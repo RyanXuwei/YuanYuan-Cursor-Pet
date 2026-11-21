@@ -2,7 +2,7 @@
 'use strict';
 const S=YuanYuanPetSchema,DB=YuanYuanPetStore,I=YuanYuanPetImages,$=id=>document.getElementById(id);
 let assets={},bitmaps={},busy=false,saveQueue=Promise.resolve(),active=null;
-const cards={};
+const cards={},references={};
 function message(text){$('message').textContent=text;}
 function snapshot(id='draft'){return {id,name:$('petName').value.trim()||'My Pet',description:$('description').value,assets:{...assets},createdAt:Date.now()};}
 function persist(){const pack=snapshot();saveQueue=saveQueue.catch(()=>{}).then(()=>DB.put(pack));return saveQueue;}
@@ -10,23 +10,34 @@ function refresh(){const count=S.sheets.filter(s=>assets[s.id]).length;$('progre
 function download(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
 async function copy(text){try{await navigator.clipboard.writeText(text);message('提示詞已複製，請貼到 ChatGPT。');}catch{const area=$('promptText');area.value=text;area.closest('details').open=true;area.focus();area.select();message('請按 Ctrl+C 複製已選取的提示詞。');}}
 function txt(text,name){download(new Blob(['\ufeff',text],{type:'text/plain;charset=utf-8'}),name);}
-async function preview(spec,asset){const bitmap=await createImageBitmap(asset.blob);bitmaps[spec.id]?.close();bitmaps[spec.id]=bitmap;const card=cards[spec.id];card.badge.textContent='已就緒';card.badge.className='badge ready';card.status.textContent=asset.sourceWidth+' × '+asset.sourceHeight+' → '+asset.width+' × '+asset.height;card.status.className='card-status';if(card.url)URL.revokeObjectURL(card.url);card.url=URL.createObjectURL(asset.blob);card.img.src=card.url;}
+async function preview(spec,asset){const bitmap=await createImageBitmap(asset.blob);bitmaps[spec.id]?.close();bitmaps[spec.id]=bitmap;last=-1;const card=cards[spec.id];card.badge.textContent='已就緒';card.badge.className='badge ready';card.status.textContent=asset.sourceWidth+' × '+asset.sourceHeight+' → '+asset.width+' × '+asset.height;card.status.className='card-status';if(card.url)URL.revokeObjectURL(card.url);card.url=URL.createObjectURL(asset.blob);card.img.src=card.url;}
 for(const s of S.sheets){
  const card=document.createElement('article');card.className='card';
  const head=document.createElement('div');head.className='card-head';const title=document.createElement('h3');title.textContent=s.label;const badge=document.createElement('span');badge.className='badge';badge.textContent='待匯入';head.append(title,badge);
  const filename=document.createElement('p');filename.className='filename';filename.textContent=s.file;
  const spec=document.createElement('p');spec.className='spec';spec.textContent=s.cols*384+' × '+s.rows*416+' px · '+s.cols+' 欄 × '+s.rows+' 列 · '+s.frames+' 格';
  const box=document.createElement('div');box.className='preview';const wrap=document.createElement('div');wrap.className='canvas-wrap';const canvas=document.createElement('canvas');canvas.width=384;canvas.height=416;wrap.append(canvas);const info=document.createElement('div');info.className='preview-info';
- const row=document.createElement('select');row.setAttribute('aria-label',s.label+'預覽列');for(let i=0;i<s.rows;i++){const o=document.createElement('option');o.value=i;o.textContent='第 '+(i+1)+' 列';row.append(o);}
- const bg=document.createElement('button');bg.textContent='切換預覽背景';let bgIndex=0;bg.onclick=()=>{wrap.className='canvas-wrap '+['','dark','light'][++bgIndex%3];};info.append(row,bg);box.append(wrap,info);
+ const row=document.createElement('select');row.setAttribute('aria-label',s.label+'預覽列');if(s.id==='run'){const all=document.createElement('option');all.value='all';all.textContent='完整 8 格奔跑循環';row.append(all);}for(let i=0;i<s.rows;i++){const o=document.createElement('option');o.value=i;o.textContent='第 '+(i+1)+' 列';row.append(o);}
+ const bg=document.createElement('button');bg.textContent='切換預覽背景';let bgIndex=0;bg.onclick=()=>{const theme=['','dark','light'][++bgIndex%3];wrap.className='canvas-wrap '+theme;refWrap.className='canvas-wrap '+theme;};
+ const refWrap=document.createElement('div');refWrap.className='canvas-wrap';const refCanvas=document.createElement('canvas');refCanvas.width=384;refCanvas.height=416;refCanvas.setAttribute('aria-label',s.label+'原版圓圓動作');refWrap.append(refCanvas);
+ const compare=document.createElement('div');compare.className='compare-previews';
+ for(const [label,view] of [['原版圓圓',refWrap],['你的寵物',wrap]]){const figure=document.createElement('figure'),caption=document.createElement('figcaption');caption.textContent=label;figure.append(caption,view);compare.append(figure);}
+ const frameLabel=document.createElement('p');frameLabel.className='frame-label';frameLabel.setAttribute('aria-live','off');
+ const step=document.createElement('input');step.type='range';step.min=0;step.max=s.id==='run'?7:s.cols-1;step.value=0;step.setAttribute('aria-label',s.label+'逐格檢查');let manualFrame=0;
+ step.oninput=()=>{manualFrame=Number(step.value);$('play').checked=false;last=-1;};
+ row.onchange=()=>{step.max=s.id==='run'&&row.value==='all'?7:s.cols-1;manualFrame=0;step.value=0;last=-1;};
+ const stepLabel=document.createElement('label');stepLabel.className='step-label';stepLabel.textContent='逐格檢查（拖動後暫停）';stepLabel.append(step);
+ info.append(row,bg,stepLabel,frameLabel);box.append(compare,info);
  const status=document.createElement('p');status.className='card-status';status.textContent='尚未選取圖片';
  const buttons=document.createElement('div');buttons.className='buttons';const input=document.createElement('input');input.type='file';input.accept='.png,.webp';input.hidden=true;
  const choose=document.createElement('button');choose.textContent='選圖／替換';choose.onclick=()=>input.click();input.onchange=()=>run(()=>importPairs([{file:input.files[0],spec:s}])).finally(()=>input.value='');
  const prompt=document.createElement('button');prompt.textContent='複製本張提示詞';prompt.onclick=()=>copy(S.prompt(s,$('description').value));
  const remove=document.createElement('button');remove.textContent='移除草稿圖';remove.onclick=()=>run(async()=>{delete assets[s.id];bitmaps[s.id]?.close();delete bitmaps[s.id];canvas.getContext('2d').clearRect(0,0,384,416);badge.textContent='待匯入';badge.className='badge';status.textContent='已移除草稿圖，目前套用的寵物不受影響。';img.removeAttribute('src');await persist();});
  buttons.append(choose,prompt,remove,input);
- const details=document.createElement('details'),summary=document.createElement('summary'),img=document.createElement('img');summary.textContent='展開完整宮格圖';img.alt=s.label+'完整宮格';details.append(summary,img);
- card.append(head,filename,spec,box,status,buttons,details);$('cards').append(card);cards[s.id]={badge,status,canvas,row,img};
+ const details=document.createElement('details'),summary=document.createElement('summary'),img=document.createElement('img');summary.textContent='展開你的完整宮格圖';img.alt=s.label+'完整宮格';details.append(summary,img);
+ const refDetails=document.createElement('details'),refSummary=document.createElement('summary'),refImg=document.createElement('img');refSummary.textContent='展開原版圓圓對照宮格';refImg.alt=s.label+'原版圓圓對照宮格';refDetails.append(refSummary,refImg);
+ const actions=document.createElement('ul');actions.className='action-guide';for(const action of s.actions){const li=document.createElement('li');li.textContent=action;actions.append(li);}
+ card.append(head,filename,spec,box,status,buttons,refDetails,details,actions);$('cards').append(card);cards[s.id]={badge,status,canvas,row,img,refCanvas,refImg,frameLabel,step,manual:()=>manualFrame};
 }
 async function run(fn){if(busy)return;busy=true;refresh();try{await fn();}catch(e){message(e.message||'操作失敗，請重試。');}finally{busy=false;refresh();}}
 async function importPairs(pairs){
@@ -61,6 +72,31 @@ $('restore').onclick=()=>run(async()=>{await chrome.storage.local.remove('custom
 $('export').onclick=()=>run(async()=>{const pack=snapshot();pack.format=S.format;pack.assets={};for(const s of S.sheets)pack.assets[s.id]={base64:await I.blobBase64(assets[s.id].blob)};download(new Blob([JSON.stringify(pack)],{type:'application/json'}),'custom-pet.petpack.json');message('已匯出備份，請保存下載的檔案。');});
 async function activeStatus(){active=(await chrome.storage.local.get('customPet')).customPet;$('active').textContent=active?'目前套用：'+active.name:'目前套用：原版圓圓';}
 chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local'&&changes.customPet)activeStatus();});
-let last=-1;function animate(now){const frame=$('play').checked?Math.floor(now/140):0;if(frame!==last&&!document.hidden){last=frame;for(const s of S.sheets){const bitmap=bitmaps[s.id];if(!bitmap)continue;const c=cards[s.id],n=s.id==='run'?frame%8:Number(c.row.value)*s.cols+frame%s.cols;const ctx=c.canvas.getContext('2d');ctx.clearRect(0,0,384,416);ctx.drawImage(bitmap,n%s.cols*384,Math.floor(n/s.cols)*416,384,416,0,0,384,416);}}requestAnimationFrame(animate);}requestAnimationFrame(animate);
+// Reuse the shipped art, arranged in the same grid as imported sheets.
+async function loadReferences(){
+ const source={idle:['yuanyuan.png',8,11],run:['yuanyuan-run.png',4,2],daily:['yuanyuan-daily.png',4,4],moods:['yuanyuan-moods.png',4,4],held:['yuanyuan-held.png',1,1],bubble:['yuanyuan-lifted.png',4,1],closeup:['yuanyuan-curious.png',4,1],dig:['yuanyuan-dig.png',4,1]};
+ let count=0;
+ for(const spec of S.sheets){
+  const [file,cols,rows]=source[spec.id],image=new Image();image.src=chrome.runtime.getURL('assets/'+file);await image.decode();
+  const grid=document.createElement('canvas');grid.width=spec.cols*384;grid.height=spec.rows*416;const ctx=grid.getContext('2d',{willReadFrequently:true}),sw=image.naturalWidth/cols,sh=image.naturalHeight/rows;
+  for(let n=0;n<spec.frames;n++){const col=n%spec.cols,row=Math.floor(n/spec.cols);const sourceRow=spec.id==='idle'?(row===0?0:6):row;ctx.drawImage(image,col*sw,sourceRow*sh,sw,sh,col*384,row*416,384,416);}
+  // Match the alpha cleanup used when displaying the original pet on web pages.
+  const pixels=ctx.getImageData(0,0,grid.width,grid.height);for(let i=3;i<pixels.data.length;i+=4)pixels.data[i]=Math.max(0,Math.min(255,3*pixels.data[i]-510));ctx.putImageData(pixels,0,0);
+  references[spec.id]=await createImageBitmap(grid);
+  const blob=await new Promise((resolve,reject)=>grid.toBlob(b=>b?resolve(b):reject(Error('參考圖編碼失敗')),'image/png'));
+  cards[spec.id].refImg.src=URL.createObjectURL(blob);document.documentElement.dataset.referenceCount=String(++count);last=-1;
+ }
+}
+let last=-1;function animate(now){
+ const playing=$('play').checked,frame=playing?Math.floor(now/140):0;
+ if(frame!==last&&!document.hidden){last=frame;for(const s of S.sheets){
+  const c=cards[s.id],f=playing?frame:c.manual(),n=s.id==='run'&&c.row.value==='all'?f%8:Number(c.row.value||0)*s.cols+f%s.cols;
+  c.frameLabel.textContent='第 '+(Math.floor(n/s.cols)+1)+' 列 · 第 '+(n%s.cols+1)+' 格';if(playing)c.step.value=s.id==='run'&&c.row.value==='all'?n:f%s.cols;
+  for(const [bitmap,canvas] of [[references[s.id],c.refCanvas],[bitmaps[s.id],c.canvas]]){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,384,416);if(bitmap)ctx.drawImage(bitmap,n%s.cols*384,Math.floor(n/s.cols)*416,384,416,0,0,384,416);}
+ }}
+ requestAnimationFrame(animate);
+}
+$('play').onchange=()=>{last=-1;};document.addEventListener('visibilitychange',()=>{last=-1;});requestAnimationFrame(animate);
+loadReferences().catch(()=>message('部分圓圓對照圖載入失敗，請重新開啟匯入頁。'));
 run(async()=>{await activeStatus();const draft=await DB.get('draft')||(active?await DB.get(active.id):null);if(draft){$('petName').value=draft.name||'';$('description').value=draft.description||'';for(const s of S.sheets)if(draft.assets?.[s.id]){await preview(s,draft.assets[s.id]);assets[s.id]=draft.assets[s.id];}}message('草稿已就緒，選圖不會立即替換目前的寵物。');});
 })();
